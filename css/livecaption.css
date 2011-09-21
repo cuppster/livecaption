@@ -1,0 +1,17 @@
+
+/* 
+
+livecaption styles
+
+* see: http://mondaybynoon.com/2007/04/02/linux-font-equivalents-to-popular-web-typefaces/
+
+----------------------------------------------------------------------*/
+
+.CL_caption {    
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  -webkit-text-stroke: 2px black;
+  color: white;
+  font-weight: bold;
+}
+    
+    
