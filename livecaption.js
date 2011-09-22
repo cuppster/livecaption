@@ -25,10 +25,9 @@ Enjoy!
     var settings = {
       target            : false,
       maxWidth          : 300,
-      maxFont           : 30,
+      maxFont           : 32,
       minFont           : 8,
       wrap              : false,
-      fontSize          : 12,
       defaultText       : false,
       canEdit           : true,
       isCenter          : true,
@@ -36,9 +35,16 @@ Enjoy!
       doAnimate         : true,
       animatePause      : 200,
       animateDuration   : 'fast',
-      position          : 'top'
+      position          : 'top',
+      marginTop         : 8,
+      marginBottom      : 8,
+      marginLeft        : 8,
+      marginRight       : 8
     };
     $.extend( settings, options );
+    
+    // get the max text width with margins
+    settings.maxTextWidth = settings.maxWidth - ( settings.marginLeft + settings.marginRight );
     
     // resize event
     var EVENT_RESIZE = 'CL_resize';
@@ -59,13 +65,14 @@ Enjoy!
     //
     var imageHeight;
     target.parent().children("IMG").first().load(function() {
-      $(this).css('width', settings.maxWidth);
+      $(this).css         ('width', settings.maxWidth);
+      $(this).addClass    ('CL_img');
       imageHeight = $(this).height();          
       // special handling for 'bottom'
       if ('bottom' == settings.position) {   
         target.bind(EVENT_RESIZE, function() {
           var targetHeight = target.height();
-          target.css('top', (imageHeight - targetHeight) + 'px');
+          target.css('top', (imageHeight - targetHeight - settings.marginBottom) + 'px');
         });
       }          
     /* workaround/hack for images already in the cache for IE; see: http://api.jquery.com/load-event/ */
@@ -77,12 +84,12 @@ Enjoy!
     // give target some style
     //
     target.addClass('CL_caption');
-    target.css('left',         0);
+    target.css('left',         settings.marginLeft);
     target.css('position',     'absolute');
     
-    // specific to bottom
+    // specific to top and bottom
     if ('top' == settings.position) {
-      target.css        ('top',          0); 
+      target.css        ('top', settings.marginTop); 
       target.addClass   ('CL_top');
     }
     else if ('bottom' == settings.position) {
@@ -91,9 +98,10 @@ Enjoy!
     
     // give parent some style
     //
-    target.parent().css('position',     'relative');
-    target.parent().css('width',         settings.maxWidth);
-    target.parent().css('overflow',     'hidden');
+    target.parent().css       ('position',     'relative');
+    target.parent().css       ('width',         settings.maxWidth);
+    target.parent().css       ('overflow',     'hidden');
+    target.parent().addClass  ('CL_box');
     
     // create wrapper
     //
@@ -105,8 +113,8 @@ Enjoy!
     
     // font settings
     //
-    target.css    ('font-size', settings.fontSize + 'pt'); 
-    target.attr   ('fontsize',  settings.fontSize);
+    target.css    ('font-size', settings.maxFont + 'pt'); 
+    target.attr   ('fontsize',  settings.maxFont);
     
     // setup default text
     if (settings.defaultText) {
@@ -131,13 +139,13 @@ Enjoy!
     
     function center() {
       var width = target.width();
-      var x = parseInt((settings.maxWidth - width) / 2);
+      var x = parseInt((settings.maxTextWidth - width) / 2);
       if (pauseTimer) clearTimeout(pauseTimer);
       if (settings.doAnimate) {
-        target.animate({left : x}, {duration: settings.animateDuration,});
+        target.animate({left : ( x + settings.marginLeft )}, {duration: settings.animateDuration,});
       }
       else {
-        target.css('left', x + 'pt'); 
+        target.css('left', ( x + settings.marginLeft ) + 'pt'); 
       }
     }
     
@@ -164,7 +172,7 @@ Enjoy!
         var width = target.width();
         //console.log("checking width = " + width);
           
-        if (settings.maxWidth < width ) {
+        if (settings.maxTextWidth < width ) {
         
           //console.log("reducing check ...");
           
