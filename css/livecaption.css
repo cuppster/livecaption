@@ -13,5 +13,9 @@ livecaption styles
   color: white;
   font-weight: bold;
 }
+
+.CL_box {
+  border: 1px solid black;
+}
     
     
